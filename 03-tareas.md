@@ -72,6 +72,17 @@ Todas as tarefas abaixo arrancam em estado **Spec Ready** no board `Backlog → 
 - **PHF-093** — Workflow de promoção staging → main com aprovação manual. Risco: alto.
 - Não depende de outras epics — pode (e deve) rodar em paralelo, antes de qualquer PR de código de produto ser aberto.
 
+## Epic 10 — Design system mobile-first (Storybook, referência Twenty CRM)
+- **PHF-100** — Setup Storybook (Next.js, addons essentials/a11y/viewport). Risco: baixo.
+- **PHF-101** — Design tokens mobile-first (cor, tipografia, espaçamento, breakpoints). Risco: médio.
+- **PHF-102** — Componentes base: Button, Input, Select, Checkbox/Radio, Badge, Avatar. Risco: baixo.
+- **PHF-103** — Componentes de dados: Table/DataGrid, Card, List item, Empty state. Risco: médio.
+- **PHF-104** — Componentes de overlay: Modal, Drawer, Toast, Tooltip, Popover. Risco: médio.
+- **PHF-105** — Layout responsivo mobile-first (Grid/Stack primitives, navegação adaptativa). Risco: médio.
+- **PHF-106** — Tema e revisão de acessibilidade (contraste, foco, touch target). Risco: médio.
+- **PHF-107** — Publicar Storybook estático + integrar no CI. Risco: baixo.
+- **PHF-108** — Documentar guia de uso do design system. Risco: baixo.
+
 ## Resumo de dependências críticas
 
 ```
@@ -80,4 +91,5 @@ Epic 0 (spikes) ──┬──> Epic 3 (processamento) ──> Epic 4 (moderaç
                    └──> Epic 5 (pareamento, PHF-001)                    │
 Epic 1 (dados/infra) ──> Epic 2 (upload/consentimento) ──> Epic 3       │
 Epic 9 (CI/CD) — paralelo, mas deve estar pronto ANTES do primeiro PR de código real ser aberto (nenhum agente commita sem branch protegida + PR template + revisor Gemini configurados)
+Epic 10 (design system) — PHF-100/101 paralelos às demais epics desde já; Epics 4, 6 e 7 devem CONSUMIR os componentes daqui (PHF-102 a 105) em vez de criar UI ad-hoc — coordenar para não bloquear moderation-realtime/admin-gallery à toa, mas alertar se UI dessas epics for adiante sem o token/componente correspondente pronto
 ```

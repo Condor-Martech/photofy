@@ -42,6 +42,11 @@ flowchart LR
 | Transcodificação de reel | ffmpeg (worker dedicado) | — |
 | Deploy | Docker Swarm + Traefik | — (mesmo padrão do Hipermais/VideoFlow) |
 | Segredos | Secrets manager (a definir qual, mesmo padrão dos demais serviços) | Variáveis de ambiente em texto puro — descartado por política de segurança |
+| Design system / UI | Tailwind CSS + shadcn/ui, componentes documentados em Storybook (mobile-first) | Linaria + Jotai (stack do Twenty CRM, usado só como referência visual/de padrão, não copiado) — descartado para não sair do stack Next.js já decidido |
+
+### 1.1 Design system (Epic 10)
+
+O design system do Photofy usa o **Twenty CRM** (github.com/twentyhq/twenty) como referência de padrão visual — não como dependência técnica: reaproveita-se a linguagem visual limpa e densa em dados deles (hierarquia tipográfica, espaçamento, componentes de lista/tabela), implementada com o stack já decidido (Next.js + Tailwind + shadcn/ui), não com a stack deles (Linaria/Jotai). Requisito não-negociável: **mobile-first** — cada componente é desenhado a partir do menor breakpoint primeiro, dado que a persona Participante usa majoritariamente celular (upload via QR). Componentes documentados e testados via **Storybook** (addons: essentials, a11y, viewport). Ver `03-tareas.md` Epic 10 para o desglose (PHF-100 a PHF-108).
 
 ## 3. Modelo de dados
 
