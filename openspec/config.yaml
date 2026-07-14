@@ -1,0 +1,51 @@
+schema: spec-driven
+
+context: |
+  Photofy: sistema single-tenant multi-evento de fotos/reels ao vivo (Clube Condor).
+  Stack: Next.js 15.5 (App Router) + React 19, TypeScript strict, Supabase (SSR + RLS + CLI local), Tailwind + shadcn/ui, Storybook 8, Vitest, ESLint 9, Docker multi-stage.
+  Docs de dominio (fonte de verdade): 00-prd.md, 01-poc-spikes.md, 02-spec.md (Gherkin), 03-tareas.md (backlog PHF-N).
+  Convenções: kebab-case em arquivos; Portugues em migrations, testes SQL e specs Gherkin; Conventional Commits com tag [ai-assisted: <modelo>] quando aplicável.
+  Branches: `feat|fix|chore/<nome>` a partir de `staging`. Nunca push direto a main/staging (branch protection).
+  Regras inegociáveis: silêncio total de moderação; galeria permanente (deleção só via deletion_request); RLS por event_id obrigatório em toda tabela nova; secrets NUNCA no repo (Swarm/.env.local/Actions Secrets).
+  Governança IA por risco: baixo (1 aprov) / médio (1 aprov + E2E) / ALTO — RLS, consent_record, deletion_request, migrações de dados, Device Authorization Flow — (2 aprovações + QA staging + feature flag obrigatório).
+
+rules:
+  proposal:
+    - Referencia a issue PHF-N do backlog (03-tareas.md) e o(s) cenário(s) Gherkin de 02-spec.md §5
+    - Classifica o nível de risco IA (baixo/médio/alto) e lista aprovações necessárias
+    - Identifica impacto em RLS, consent_record, deletion_request ou fluxos de moderação (silêncio)
+    - Inclui plano de rollback (SQL down + feature flag off) para migrations e mudanças de RLS
+  specs:
+    - Usa Given/When/Then em Portugues, consistente com 02-spec.md §5
+    - Usa palavras-chave RFC 2119 (DEVE, DEVERÁ, DEVERIA, PODE)
+    - Toda cenário que envolve moderação DEVE explicitar o silêncio ao participante
+    - Toda tabela nova exige cenário de RLS por event_id (positivo e negativo)
+  design:
+    - Inclui sequence diagram (mermaid) para fluxos multi-ator ou multi-serviço
+    - Documenta decisões de arquitetura com rationale e alternativas descartadas
+    - Referencia spikes relevantes de 01-poc-spikes.md quando aplicável
+    - Mudanças em RLS levam matriz explícita: papel × tabela × operação
+  tasks:
+    - Agrupa por fase: schema/migration, RLS + tests SQL, backend/API, UI, feature flag, docs, QA
+    - Usa numeração hierárquica (1.1, 1.2, ...) e tarefas completáveis em uma sessão
+    - Inclui tarefa explícita de teste SQL em supabase/tests/ para toda migration
+    - Inclui tarefa de feature flag para mudanças de risco alto
+  apply:
+    - Segue convenções do repo (kebab-case, Portugues em domínio, TypeScript strict)
+    - Migrations em supabase/migrations/ com timestamp; testes SQL em supabase/tests/
+    - Nunca introduz segredo no código; usa `process.env` server-side, jamais prefixo NEXT_PUBLIC_ para segredo
+    - Commits Conventional; adiciona `[ai-assisted: <modelo>]` no corpo quando IA gera código relevante
+    tdd: false
+    test_command: "vitest run --project=app"
+  verify:
+    - Roda `vitest run --project=app` e (se houver stories tocadas) `vitest run --project=storybook`
+    - Roda `supabase test db` quando a mudança inclui migrations ou políticas RLS
+    - Compara implementação contra cada cenário Gherkin da spec da mudança
+    - Confirma que gitleaks (secret-scan.yml) passa localmente antes de abrir PR
+    test_command: "vitest run --project=app"
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Avisa antes de mesclar deltas destrutivos (grandes remoções em specs/)
+    - Avisa se a mudança remove ou relaxa RLS, política de silêncio de moderação, ou galeria permanente
+    - Registra PR final e issue PHF-N fechada no relatório de arquivamento

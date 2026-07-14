@@ -1,5 +1,5 @@
 // Tipos da trilha de auditoria (PHF-082). Espelham a tabela `audit_log`
-// (migration 20260714120000_phf082_audit_log.sql): a forma persistida e a mesma
+// (migration 20260714120001_phf082_audit_log.sql): a forma persistida e a mesma
 // que os detectores de anomalia consomem, entao ha uma unica fonte de verdade.
 
 export type ActorType = 'anon' | 'staff' | 'device' | 'worker' | 'system';
