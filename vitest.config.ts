@@ -23,6 +23,8 @@ export default defineConfig({
       "workers/**",
       "packages/**",
       "lib/upload/validate-upload.test.ts",
+      "lib/dispositivos/revogar.test.ts",
+      "lib/slideshow/slideshow-config.test.ts",
     ],
   },
 });

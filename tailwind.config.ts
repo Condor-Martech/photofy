@@ -38,8 +38,8 @@ const config: Config = {
       px: "1px",
       ...spacing,
     },
-    fontFamily: typography.fontFamily,
-    fontSize: typography.fontSize,
+    fontFamily: typography.fontFamily as unknown as Record<string, string[]>,
+    fontSize: typography.fontSize as unknown as Record<string, [string, { lineHeight: string }]>,
     fontWeight: typography.fontWeight,
     letterSpacing: typography.letterSpacing,
     borderRadius: {
