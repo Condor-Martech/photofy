@@ -125,3 +125,44 @@ describe("ItemFila — ações de moderação (PHF-041)", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 });
+
+describe("ItemFila — seleção para lote (PHF-042)", () => {
+  it("sem aoAlternarSelecao não mostra checkbox (só-leitura / sem lote)", () => {
+    render(
+      <ul>
+        <ItemFila item={item({ id: "a", autor: "Ana" })} />
+      </ul>,
+    );
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+  });
+
+  it("com aoAlternarSelecao mostra checkbox e alterna pelo id do item", async () => {
+    const aoAlternarSelecao = vi.fn();
+    render(
+      <ul>
+        <ItemFila
+          item={item({ id: "a", autor: "Ana" })}
+          aoAlternarSelecao={aoAlternarSelecao}
+        />
+      </ul>,
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: /selecionar envio de ana/i });
+    expect(checkbox).not.toBeChecked();
+    await userEvent.click(checkbox);
+    expect(aoAlternarSelecao).toHaveBeenCalledWith("a");
+  });
+
+  it("reflete o estado selecionado", () => {
+    render(
+      <ul>
+        <ItemFila
+          item={item({ id: "a", autor: "Ana" })}
+          selecionado
+          aoAlternarSelecao={vi.fn()}
+        />
+      </ul>,
+    );
+    expect(screen.getByRole("checkbox", { name: /selecionar envio de ana/i })).toBeChecked();
+  });
+});

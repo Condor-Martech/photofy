@@ -17,6 +17,20 @@ export type AplicarDecisao = (entrada: {
   motivo?: string;
 }) => Promise<void>;
 
+// Porta para aplicar a MESMA decisão a vários itens de uma vez (PHF-042). A
+// implementação real chama registrar_decisao_moderacao_lote numa única transação,
+// então ou todos mudam de status + geram moderation_log, ou nenhum (atomicidade —
+// cobre o Gherkin "Aprovação em lote"). Injetável, igual a AplicarDecisao.
+export type AplicarDecisaoLote = (entrada: {
+  mediaIds: string[];
+  acao: AcaoModeracao;
+  motivo?: string;
+}) => Promise<void>;
+
+// Filtro da fila por status (PHF-042). "todos" não filtra; os demais espelham
+// StatusMidia. Aplicado sobre a lista ao vivo já ordenada por ordenarFila.
+export type FiltroStatus = "todos" | StatusMidia;
+
 export interface ItemMidia {
   id: string;
   event_id: string;

@@ -46,15 +46,19 @@ function horario(criadoEm: string): string {
 }
 
 // Callback opcional de decisão (PHF-041). Ausente = painel só-leitura (ex.: PHF-040).
+// Seleção (PHF-042) também é opcional: sem aoAlternarSelecao não há checkbox.
 type Props = {
   item: ItemMidia;
   aoDecidir?: (acao: AcaoModeracao, motivo?: string) => void | Promise<void>;
+  selecionado?: boolean;
+  aoAlternarSelecao?: (id: string) => void;
 };
 
 // Linha da fila de moderação (PHF-040) com ações de aprovar/reprovar/reverter
-// (PHF-041). As ações oferecidas dependem do status atual (decisao.ts) — o Realtime
-// reflete a mudança de status, então não mantemos status otimista local aqui.
-export function ItemFila({ item, aoDecidir }: Props) {
+// (PHF-041) e seleção para ações em lote (PHF-042). As ações oferecidas dependem
+// do status atual (decisao.ts) — o Realtime reflete a mudança de status, então não
+// mantemos status otimista local aqui.
+export function ItemFila({ item, aoDecidir, selecionado, aoAlternarSelecao }: Props) {
   const [processando, setProcessando] = useState(false);
   const acoes = aoDecidir ? acoesDisponiveis(item.status) : [];
 
@@ -77,6 +81,16 @@ export function ItemFila({ item, aoDecidir }: Props) {
 
   return (
     <li className="flex items-start gap-3 border-b border-zinc-100 p-3">
+      {aoAlternarSelecao ? (
+        <input
+          type="checkbox"
+          checked={selecionado ?? false}
+          onChange={() => aoAlternarSelecao(item.id)}
+          aria-label={`Selecionar envio de ${item.autor?.trim() || "Anônimo"}`}
+          className="mt-1 h-4 w-4 shrink-0 rounded border-zinc-300"
+        />
+      ) : null}
+
       {item.url_thumb ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
