@@ -70,7 +70,8 @@ Todas as tarefas abaixo arrancam em estado **Spec Ready** no board `Backlog → 
 - **PHF-091** — CI: lint, testes unitários, build. Risco: baixo.
 - **PHF-092** — Agente revisor headless via Gemini CLI (`google-github-actions/run-gemini-cli@v0`, `GEMINI_CLI_TRUST_WORKSPACE=true`) lendo SPEC + Gherkin + diff do PR. Risco: médio.
 - **PHF-093** — Workflow de promoção staging → main com aprovação manual. Risco: alto.
-- Não depende de outras epics — pode (e deve) rodar em paralelo, antes de qualquer PR de código de produto ser aberto.
+- **PHF-094** — Build e push de imagem Docker para GHCR em `staging`/`main` (`docker-publish.yml`), com verificação de build (sem push) no `ci.yml` dos PRs. Risco: médio.
+- Não depende de outras epics — pode (e deve) rodar em paralelo, antes de qualquer PR de código de produto ser aberto. PHF-094 assume que PHF-020 (scaffold Next.js) define `output: 'standalone'`.
 
 ## Epic 10 — Design system mobile-first (Storybook, referência Twenty CRM)
 - **PHF-100** — Setup Storybook (Next.js, addons essentials/a11y/viewport). Risco: baixo.

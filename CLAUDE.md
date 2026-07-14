@@ -35,5 +35,6 @@ Use o template em `.github/PULL_REQUEST_TEMPLATE.md`. Todo PR referencia a issue
 
 ## CI
 
-- `ci.yml`: lint, testes unitários, build (guard por `hashFiles('package-lock.json')` até o scaffold do projeto ser mergeado).
+- `ci.yml`: lint, testes unitários, build, e um `docker build` de verificação (sem push) — tudo guardado por `hashFiles('package-lock.json')` até o scaffold do projeto ser mergeado.
 - `pr-review.yml`: agente revisor via **Gemini CLI** (`google-github-actions/run-gemini-cli@v0`, `GEMINI_CLI_TRUST_WORKSPACE=true`) — nunca `anthropics/claude-code-action`, pois este projeto não usa `ANTHROPIC_API_KEY` (Claude é por assinatura local). Lê `CLAUDE.md` + `02-spec.md` §5 (Gherkin) + diff do PR; sua aprovação é necessária mas não suficiente — revisão humana continua obrigatória.
+- `docker-publish.yml`: builda a imagem (`Dockerfile` na raiz, multi-stage, non-root, pressupõe `next.config.js` com `output: 'standalone'`) e publica em **GHCR** a cada push em `staging` ou `main` (após merge, nunca em PR). Login via `GITHUB_TOKEN` padrão (`packages: write`), sem secret adicional. Tags: `ghcr.io/<owner>/<repo>:staging` / `:main` + `:<branch>-<sha curto>`. Guardado por `hashFiles('package-lock.json')` como os demais workflows.

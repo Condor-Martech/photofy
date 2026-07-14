@@ -34,3 +34,17 @@ jobs:
       - name: Build
         if: hashFiles('package-lock.json') != ''
         run: npm run build --if-present
+
+      # Verifica que o Dockerfile builda (sem push) antes do merge -- o publish de verdade
+      # (com push para GHCR) roda em docker-publish.yml, so em push para staging/main.
+      - uses: docker/setup-buildx-action@v3
+        if: hashFiles('package-lock.json') != ''
+
+      - name: Docker build (verificação, sem push)
+        if: hashFiles('package-lock.json') != ''
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
