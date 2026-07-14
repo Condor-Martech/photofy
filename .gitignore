@@ -1,6 +1,8 @@
 node_modules/
+# Segredos: ignora qualquer .env* (real), exceto o template versionado .env.example (PHF-081).
 .env
-.env.local
+.env.*
+!.env.example
 .next/
 next-env.d.ts
 *.tsbuildinfo
