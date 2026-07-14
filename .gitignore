@@ -12,6 +12,9 @@ build/
 *.log
 .DS_Store
 
+*storybook.log
+storybook-static
+
 # Supabase local dev state
 supabase/.branches/
 supabase/.temp/
