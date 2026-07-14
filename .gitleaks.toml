@@ -1,0 +1,13 @@
+# Config do gitleaks para o PHF-081. Estende os detectores padrão e libera apenas
+# os arquivos de exemplo/documentação, que carregam placeholders — não segredos reais.
+title = "Photofy gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholders de exemplo e documentação não são credenciais reais"
+paths = [
+  '''\.env\.example$''',
+  '''docs/secrets-management\.md$''',
+]

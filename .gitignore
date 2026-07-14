@@ -1,8 +1,11 @@
 node_modules/
+# Segredos: ignora qualquer .env* (real), exceto o template versionado .env.example (PHF-081).
 .env
-.env.local
+.env.*
+!.env.example
 .next/
 next-env.d.ts
+*.tsbuildinfo
 coverage/
 dist/
 build/
@@ -11,3 +14,8 @@ build/
 
 *storybook.log
 storybook-static
+
+# Supabase local dev state
+supabase/.branches/
+supabase/.temp/
+tsconfig.tsbuildinfo

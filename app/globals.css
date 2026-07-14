@@ -70,3 +70,13 @@
     background-color: var(--color-neutral-0);
   }
 }
+
+/* Transição de slide do telão (PHF-051), usada por animate-[fade_...]. */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

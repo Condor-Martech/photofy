@@ -1,0 +1,19 @@
+{
+  "name": "@photofy/rate-limiting",
+  "version": "0.1.0",
+  "description": "PHF-080 — Rate limiting e protecao anti-abuso na ingestao: janela deslizante distribuida (Redis) por IP e por evento, com fail-open para nao degradar picos legitimos de upload",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.8"
+  }
+}
