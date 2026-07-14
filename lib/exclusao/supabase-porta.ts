@@ -8,28 +8,14 @@ import { PortaExclusao } from "./executar";
 // acontece. A regra é dura: mídia só sai da galeria via este fluxo auditado.
 //
 // A aplicação PRECISA ser atômica — mídia, solicitação e auditoria mudam juntas
-// ou nada muda. Daí uma RPC (função SQL security definer) e não 3 writes soltos
-// do cliente. Migração pertence ao dono do painel do organizador (Epic 7 / PHF-073).
+// ou nada muda. A RPC (função SQL security definer) que garante isso já está
+// commitada: supabase/migrations/20260714130000_phf063_executar_deletion_request.sql
+// (com trava FOR UPDATE, guarda de "pendente" e least-privilege para service_role).
 //
-// RPC pretendida:
-//   create function executar_deletion_request(
-//     p_solicitacao uuid, p_decisao text, p_organizador uuid, p_motivo text
-//   ) returns void language plpgsql security definer as $$
-//   begin
-//     if p_decisao = 'executar' then
-//       update media_items set status = 'excluido'
-//         where id = (select media_id from deletion_request where id = p_solicitacao);
-//       update deletion_request set status = 'executada' where id = p_solicitacao;
-//       insert into moderation_log (media_id, moderador_id, acao, motivo)
-//         select media_id, p_organizador, 'excluir', p_motivo
-//         from deletion_request where id = p_solicitacao;
-//     else
-//       update deletion_request set status = 'negada' where id = p_solicitacao;
-//       insert into moderation_log (media_id, moderador_id, acao, motivo)
-//         select media_id, p_organizador, 'negar_exclusao', p_motivo
-//         from deletion_request where id = p_solicitacao;
-//     end if;
-//   end $$;
+// Wire-up pendente (aguarda provisionamento do Supabase, mesmo deferimento da galeria
+// PHF-060 e do upload PHF-021): buscarSolicitacao faz um select em deletion_request e
+// aplicar chama client.rpc('executar_deletion_request', { p_solicitacao, p_decisao,
+// p_organizador, p_motivo }) — 'executar' quando novo_status_midia != null, senão 'negar'.
 
 const NAO_IMPLEMENTADA =
   "PortaExclusao Supabase não implementada (PHF-063 aguarda wire-up do Supabase).";
