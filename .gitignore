@@ -12,3 +12,4 @@ build/
 # Supabase local dev state
 supabase/.branches/
 supabase/.temp/
+tsconfig.tsbuildinfo
