@@ -1,0 +1,19 @@
+{
+  "name": "@photofy/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Esqueleto do worker BullMQ + Redis para processamento assíncrono de mídia. A lógica real (imagem/reel) entra na Epic 3 — aqui só o cableado das filas.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "bullmq": "^5.34.0",
+    "ioredis": "^5.4.1"
+  }
+}
