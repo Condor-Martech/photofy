@@ -18,6 +18,7 @@ import { BadgePendentes } from "./badge-pendentes";
 import { BarraLote } from "./barra-lote";
 import { FiltroStatusBar } from "./filtro-status";
 import { ItemFila } from "./item-fila";
+import { PreviewMidia } from "./preview-midia";
 import { useFilaModeracao } from "./use-fila-moderacao";
 
 interface Props {
@@ -62,6 +63,9 @@ export function PainelModeracao({
 
   const [filtro, setFiltro] = useState<FiltroStatus>("todos");
   const [selecao, setSelecao] = useState<ReadonlySet<string>>(() => new Set());
+  // Preview ampliado (PHF-043): um único overlay por vez, controlado aqui pelo id.
+  // Resolvemos o item pela lista ao vivo para o preview refletir mudanças de status.
+  const [idPreview, setIdPreview] = useState<string | null>(null);
 
   const contagem = useMemo(() => contarPorStatus(itens), [itens]);
   const itensVisiveis = useMemo(
@@ -95,6 +99,13 @@ export function PainelModeracao({
   }, []);
 
   const limparSelecao = useCallback(() => setSelecao(new Set()), []);
+
+  const abrirPreview = useCallback((item: ItemMidia) => setIdPreview(item.id), []);
+  const fecharPreview = useCallback(() => setIdPreview(null), []);
+  const itemPreview = useMemo(
+    () => (idPreview ? (itens.find((item) => item.id === idPreview) ?? null) : null),
+    [itens, idPreview],
+  );
 
   // Seleciona/limpa todos os itens atualmente visíveis (respeita o filtro ativo).
   const todosVisiveisSelecionados =
@@ -161,11 +172,16 @@ export function PainelModeracao({
                 aoDecidir={decidir(item.id)}
                 selecionado={selecao.has(item.id)}
                 aoAlternarSelecao={alternarSelecao}
+                aoAbrirPreview={abrirPreview}
               />
             ))}
           </ul>
         </>
       )}
+
+      {itemPreview ? (
+        <PreviewMidia item={itemPreview} aoFechar={fecharPreview} />
+      ) : null}
     </section>
   );
 }

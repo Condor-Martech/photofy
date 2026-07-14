@@ -47,18 +47,27 @@ function horario(criadoEm: string): string {
 
 // Callback opcional de decisão (PHF-041). Ausente = painel só-leitura (ex.: PHF-040).
 // Seleção (PHF-042) também é opcional: sem aoAlternarSelecao não há checkbox.
+// Preview ampliado (PHF-043) também é opcional: sem aoAbrirPreview a thumbnail não
+// é clicável — quem monta o overlay é o painel, para haver só um preview por vez.
 type Props = {
   item: ItemMidia;
   aoDecidir?: (acao: AcaoModeracao, motivo?: string) => void | Promise<void>;
   selecionado?: boolean;
   aoAlternarSelecao?: (id: string) => void;
+  aoAbrirPreview?: (item: ItemMidia) => void;
 };
 
 // Linha da fila de moderação (PHF-040) com ações de aprovar/reprovar/reverter
 // (PHF-041) e seleção para ações em lote (PHF-042). As ações oferecidas dependem
 // do status atual (decisao.ts) — o Realtime reflete a mudança de status, então não
 // mantemos status otimista local aqui.
-export function ItemFila({ item, aoDecidir, selecionado, aoAlternarSelecao }: Props) {
+export function ItemFila({
+  item,
+  aoDecidir,
+  selecionado,
+  aoAlternarSelecao,
+  aoAbrirPreview,
+}: Props) {
   const [processando, setProcessando] = useState(false);
   const acoes = aoDecidir ? acoesDisponiveis(item.status) : [];
 
@@ -91,21 +100,36 @@ export function ItemFila({ item, aoDecidir, selecionado, aoAlternarSelecao }: Pr
         />
       ) : null}
 
-      {item.url_thumb ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={item.url_thumb}
-          alt={item.autor ? `Envio de ${item.autor}` : "Envio sem autor"}
-          className="h-16 w-16 shrink-0 rounded object-cover"
-        />
-      ) : (
-        <div
-          aria-hidden
-          className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-zinc-100 text-xs text-zinc-400"
-        >
-          {ROTULO_TIPO[item.tipo]}
-        </div>
-      )}
+      {(() => {
+        const miniatura = item.url_thumb ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.url_thumb}
+            alt={item.autor ? `Envio de ${item.autor}` : "Envio sem autor"}
+            className="h-16 w-16 rounded object-cover"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="flex h-16 w-16 items-center justify-center rounded bg-zinc-100 text-xs text-zinc-400"
+          >
+            {ROTULO_TIPO[item.tipo]}
+          </div>
+        );
+
+        return aoAbrirPreview ? (
+          <button
+            type="button"
+            onClick={() => aoAbrirPreview(item)}
+            aria-label={`Ampliar preview de ${item.autor?.trim() || "Anônimo"}`}
+            className="shrink-0 overflow-hidden rounded focus:outline-none focus:ring-2 focus:ring-zinc-500"
+          >
+            {miniatura}
+          </button>
+        ) : (
+          <div className="shrink-0">{miniatura}</div>
+        );
+      })()}
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
