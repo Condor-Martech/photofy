@@ -3,10 +3,14 @@ node_modules/
 .env.local
 .next/
 next-env.d.ts
+*.tsbuildinfo
 coverage/
 dist/
 build/
 *.log
 .DS_Store
 
-*.tsbuildinfo
+# Supabase local dev state
+supabase/.branches/
+supabase/.temp/
+tsconfig.tsbuildinfo
