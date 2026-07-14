@@ -1,0 +1,12 @@
+{
+  "name": "phf-003-realtime-batch-approval-spike",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "measure": "node measure.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "pg": "^8.12.0"
+  }
+}
