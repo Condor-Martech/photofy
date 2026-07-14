@@ -166,3 +166,48 @@ describe("ItemFila — seleção para lote (PHF-042)", () => {
     expect(screen.getByRole("checkbox", { name: /selecionar envio de ana/i })).toBeChecked();
   });
 });
+
+describe("ItemFila — abrir preview ampliado (PHF-043)", () => {
+  it("sem aoAbrirPreview a thumbnail não é um botão clicável", () => {
+    render(
+      <ul>
+        <ItemFila item={item({ id: "a", autor: "Ana", url_thumb: "https://cdn/t.jpg" })} />
+      </ul>,
+    );
+    expect(
+      screen.queryByRole("button", { name: /ampliar preview/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("com aoAbrirPreview a thumbnail vira botão e repassa o item", async () => {
+    const aoAbrirPreview = vi.fn();
+    const midia = item({ id: "a", autor: "Ana", url_thumb: "https://cdn/t.jpg" });
+    render(
+      <ul>
+        <ItemFila item={midia} aoAbrirPreview={aoAbrirPreview} />
+      </ul>,
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /ampliar preview de ana/i }),
+    );
+    expect(aoAbrirPreview).toHaveBeenCalledWith(midia);
+  });
+
+  it("abre o preview mesmo sem thumbnail (placeholder por tipo)", async () => {
+    const aoAbrirPreview = vi.fn();
+    render(
+      <ul>
+        <ItemFila
+          item={item({ id: "a", autor: null, tipo: "reel", url_thumb: null })}
+          aoAbrirPreview={aoAbrirPreview}
+        />
+      </ul>,
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /ampliar preview de anônimo/i }),
+    );
+    expect(aoAbrirPreview).toHaveBeenCalledTimes(1);
+  });
+});
