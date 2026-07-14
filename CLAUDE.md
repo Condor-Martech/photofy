@@ -26,6 +26,7 @@ Use o template em `.github/PULL_REQUEST_TEMPLATE.md`. Todo PR referencia a issue
 - **Galeria permanente**: nada é apagado automaticamente. Exclusão de um item específico ocorre apenas via `deletion_request` formal, com auditoria — proibido expurgo automático por tempo/policy no v1.
 - **RLS por `event_id`** é obrigatório em qualquer tabela nova que armazene dado de evento — nunca confiar apenas em filtro de API.
 - **Revogação de dispositivo pareado** nunca pode afetar outras telas pareadas ao mesmo evento.
+- **Nenhuma credencial no código/repositório** — chaves, tokens e senhas vêm sempre do secrets manager (Swarm secrets em prod, `.env.local` em dev, Actions Secrets em CI). Ver `docs/secrets-management.md`. O gate `secret-scan.yml` (gitleaks) barra o PR se encontrar segredo. Nunca prefixe segredo com `NEXT_PUBLIC_`.
 
 ## Governança de IA por risco (ver `metodologia.cndr.me`)
 
@@ -36,4 +37,5 @@ Use o template em `.github/PULL_REQUEST_TEMPLATE.md`. Todo PR referencia a issue
 ## CI
 
 - `ci.yml`: lint, testes unitários, build (guard por `hashFiles('package-lock.json')` até o scaffold do projeto ser mergeado).
+- `secret-scan.yml`: gitleaks em todo PR/push para `staging`/`main` — varre diff, árvore e histórico; falha se achar credencial. Sem guard de scaffold: roda sempre. Ver `docs/secrets-management.md` (PHF-081).
 - `pr-review.yml`: agente revisor via **Gemini CLI** (`google-github-actions/run-gemini-cli@v0`, `GEMINI_CLI_TRUST_WORKSPACE=true`) — nunca `anthropics/claude-code-action`, pois este projeto não usa `ANTHROPIC_API_KEY` (Claude é por assinatura local). Lê `CLAUDE.md` + `02-spec.md` §5 (Gherkin) + diff do PR; sua aprovação é necessária mas não suficiente — revisão humana continua obrigatória.
