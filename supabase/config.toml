@@ -1,0 +1,41 @@
+# Configuração do projeto Supabase — Photofy (single tenant, multi-evento).
+# Provisiona DB + Auth + Storage + Realtime localmente (`supabase start`) e serve
+# de base para link com o projeto remoto (`supabase link` / `supabase db push`).
+project_id = "photofy"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+
+[storage]
+enabled = true
+# Bucket privado + URLs pré-assinadas são configurados em PHF-012, não aqui.
+file_size_limit = "75MiB"
+
+[auth]
+enabled = true
+# Moderador/admin autenticam via magic link (Supabase Auth), ver 02-spec.md §2.
+site_url = "http://localhost:3000"
+enable_signup = false
+
+[auth.email]
+enable_signup = false
+enable_confirmations = true
