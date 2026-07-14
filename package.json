@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "vitest run --project=app",
+    "test:storybook": "vitest run --project=storybook",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.3",
@@ -30,6 +33,17 @@
     "postcss": "8.5.6",
     "tailwindcss": "3.4.17",
     "typescript": "5.9.2",
-    "vitest": "3.2.7"
+    "vitest": "3.2.7",
+    "storybook": "^10.5.0",
+    "@storybook/nextjs-vite": "^10.5.0",
+    "@chromatic-com/storybook": "^5.2.1",
+    "@storybook/addon-vitest": "^10.5.0",
+    "@storybook/addon-a11y": "^10.5.0",
+    "@storybook/addon-docs": "^10.5.0",
+    "@storybook/addon-mcp": "^0.7.0",
+    "eslint-plugin-storybook": "^10.5.0",
+    "@vitest/browser": "3.2.7",
+    "@vitest/coverage-v8": "3.2.7",
+    "playwright": "^1.61.1"
   }
 }
