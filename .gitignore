@@ -20,6 +20,9 @@ supabase/.branches/
 supabase/.temp/
 tsconfig.tsbuildinfo
 
+# MCP local (configuração pessoal do desenvolvedor, nunca versionar)
+.mcp.json
+
 # Storybook
 *storybook.log
 storybook-static
