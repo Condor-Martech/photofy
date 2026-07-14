@@ -1,0 +1,27 @@
+name: Promote staging to main
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-promotion-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Gatilho manual (workflow_dispatch), disparado só após validação de QA em staging
+      # (ver CLAUDE.md > Fluxo). Este job só abre o PR -- nunca faz merge. O merge em
+      # `main` exige aprovação humana + CI verde via branch protection (PHF-090); o
+      # gate final de produção nunca é automatizado.
+      - name: Abrir PR de promoção staging -> main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base main --head staging \
+            --title "Promote staging to main" \
+            --body "Promoção manual de \`staging\` para \`main\`, disparada após validação de QA. Merge exige aprovação humana + CI verde (branch protection de \`main\`) -- este workflow não faz merge automático." \
+          || echo "PR staging -> main já existe -- nada a fazer."
