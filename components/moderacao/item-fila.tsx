@@ -1,4 +1,13 @@
-import type { ItemMidia, StatusMidia, TipoMidia } from "@/lib/moderacao/tipos";
+"use client";
+
+import { useState } from "react";
+import { acoesDisponiveis } from "@/lib/moderacao/decisao";
+import type {
+  AcaoModeracao,
+  ItemMidia,
+  StatusMidia,
+  TipoMidia,
+} from "@/lib/moderacao/tipos";
 
 const ROTULO_STATUS: Record<StatusMidia, string> = {
   pendente: "Pendente",
@@ -16,6 +25,18 @@ const COR_STATUS: Record<StatusMidia, string> = {
 
 const ROTULO_TIPO: Record<TipoMidia, string> = { foto: "Foto", reel: "Reel" };
 
+const ROTULO_ACAO: Record<AcaoModeracao, string> = {
+  aprovar: "Aprovar",
+  reprovar: "Reprovar",
+  reverter: "Reverter",
+};
+
+const COR_ACAO: Record<AcaoModeracao, string> = {
+  aprovar: "bg-emerald-600 hover:bg-emerald-700",
+  reprovar: "bg-rose-600 hover:bg-rose-700",
+  reverter: "bg-zinc-600 hover:bg-zinc-700",
+};
+
 function horario(criadoEm: string): string {
   return new Date(criadoEm).toLocaleTimeString("pt-BR", {
     hour: "2-digit",
@@ -24,9 +45,36 @@ function horario(criadoEm: string): string {
   });
 }
 
-// Linha da fila de moderação (PHF-040): thumbnail, autor, mensagem, tipo, horário
-// e status. Ações de aprovar/reprovar/reverter são PHF-041; preview é PHF-043.
-export function ItemFila({ item }: { item: ItemMidia }) {
+// Callback opcional de decisão (PHF-041). Ausente = painel só-leitura (ex.: PHF-040).
+type Props = {
+  item: ItemMidia;
+  aoDecidir?: (acao: AcaoModeracao, motivo?: string) => void | Promise<void>;
+};
+
+// Linha da fila de moderação (PHF-040) com ações de aprovar/reprovar/reverter
+// (PHF-041). As ações oferecidas dependem do status atual (decisao.ts) — o Realtime
+// reflete a mudança de status, então não mantemos status otimista local aqui.
+export function ItemFila({ item, aoDecidir }: Props) {
+  const [processando, setProcessando] = useState(false);
+  const acoes = aoDecidir ? acoesDisponiveis(item.status) : [];
+
+  async function decidir(acao: AcaoModeracao) {
+    if (!aoDecidir || processando) return;
+    // Reprovar pede um motivo para a auditoria (moderation_log.motivo); cancelar aborta.
+    let motivo: string | undefined;
+    if (acao === "reprovar") {
+      const resposta = window.prompt("Motivo da reprovação (opcional):");
+      if (resposta === null) return;
+      motivo = resposta.trim() || undefined;
+    }
+    setProcessando(true);
+    try {
+      await aoDecidir(acao, motivo);
+    } finally {
+      setProcessando(false);
+    }
+  }
+
   return (
     <li className="flex items-start gap-3 border-b border-zinc-100 p-3">
       {item.url_thumb ? (
@@ -59,6 +107,22 @@ export function ItemFila({ item }: { item: ItemMidia }) {
         </div>
         {item.mensagem ? (
           <p className="mt-0.5 line-clamp-2 text-sm text-zinc-600">{item.mensagem}</p>
+        ) : null}
+
+        {acoes.length > 0 ? (
+          <div className="mt-2 flex gap-2">
+            {acoes.map((acao) => (
+              <button
+                key={acao}
+                type="button"
+                disabled={processando}
+                onClick={() => decidir(acao)}
+                className={`rounded px-2.5 py-1 text-xs font-medium text-white disabled:opacity-50 ${COR_ACAO[acao]}`}
+              >
+                {ROTULO_ACAO[acao]}
+              </button>
+            ))}
+          </div>
         ) : null}
       </div>
 

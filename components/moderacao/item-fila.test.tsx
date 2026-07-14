@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ItemMidia } from "@/lib/moderacao/tipos";
 import { ItemFila } from "./item-fila";
 
@@ -52,5 +53,75 @@ describe("ItemFila", () => {
     );
     expect(screen.getByText("Anônimo")).toBeInTheDocument();
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  it("sem aoDecidir não mostra nenhuma ação (painel só-leitura)", () => {
+    render(
+      <ul>
+        <ItemFila item={item({ id: "c", status: "pendente" })} />
+      </ul>,
+    );
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+});
+
+describe("ItemFila — ações de moderação (PHF-041)", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("pendente oferece Aprovar e Reprovar; aprovar chama aoDecidir sem motivo", async () => {
+    const aoDecidir = vi.fn().mockResolvedValue(undefined);
+    render(
+      <ul>
+        <ItemFila item={item({ id: "a", status: "pendente" })} aoDecidir={aoDecidir} />
+      </ul>,
+    );
+
+    expect(screen.getByRole("button", { name: "Reprovar" })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Aprovar" }));
+
+    expect(aoDecidir).toHaveBeenCalledWith("aprovar", undefined);
+  });
+
+  it("reprovar pede motivo e o repassa; cancelar aborta", async () => {
+    const aoDecidir = vi.fn().mockResolvedValue(undefined);
+    const prompt = vi.spyOn(window, "prompt");
+    render(
+      <ul>
+        <ItemFila item={item({ id: "a", status: "pendente" })} aoDecidir={aoDecidir} />
+      </ul>,
+    );
+
+    prompt.mockReturnValueOnce("conteúdo impróprio");
+    await userEvent.click(screen.getByRole("button", { name: "Reprovar" }));
+    expect(aoDecidir).toHaveBeenCalledWith("reprovar", "conteúdo impróprio");
+
+    prompt.mockReturnValueOnce(null);
+    await userEvent.click(screen.getByRole("button", { name: "Reprovar" }));
+    expect(aoDecidir).toHaveBeenCalledTimes(1);
+  });
+
+  it("aprovado oferece apenas Reverter", async () => {
+    const aoDecidir = vi.fn().mockResolvedValue(undefined);
+    render(
+      <ul>
+        <ItemFila item={item({ id: "a", status: "aprovado" })} aoDecidir={aoDecidir} />
+      </ul>,
+    );
+
+    expect(screen.queryByRole("button", { name: "Aprovar" })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Reverter" }));
+    expect(aoDecidir).toHaveBeenCalledWith("reverter", undefined);
+  });
+
+  it("item em erro não oferece ações", () => {
+    render(
+      <ul>
+        <ItemFila
+          item={item({ id: "a", status: "erro" })}
+          aoDecidir={vi.fn()}
+        />
+      </ul>,
+    );
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 });

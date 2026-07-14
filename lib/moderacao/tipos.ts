@@ -4,6 +4,19 @@
 export type StatusMidia = "pendente" | "aprovado" | "reprovado" | "erro";
 export type TipoMidia = "foto" | "reel";
 
+// Ações de moderação (PHF-041). Espelham o enum acao de moderation_log
+// (02-spec.md §3) e os cenários Gherkin de "Moderação em tempo real" (§5).
+export type AcaoModeracao = "aprovar" | "reprovar" | "reverter";
+
+// Porta para aplicar uma decisão: registra a mudança de status + moderation_log de
+// forma atômica (a implementação real chama a função Postgres via RPC). Injetável
+// para manter o painel testável sem Supabase — mesmo padrão de AssinarFila.
+export type AplicarDecisao = (entrada: {
+  mediaId: string;
+  acao: AcaoModeracao;
+  motivo?: string;
+}) => Promise<void>;
+
 export interface ItemMidia {
   id: string;
   event_id: string;
