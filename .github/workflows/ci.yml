@@ -10,9 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # package.json ainda não existe (scaffold do projeto vem em PR separado, PHF-020/PHF-010).
-      # Guard por hashFiles evita falso-vermelho até o scaffold ser mergeado na base branch;
-      # remover o guard quando package-lock.json estiver em staging/main.
       - uses: actions/setup-node@v4
         if: hashFiles('package-lock.json') != ''
         with:
@@ -35,8 +32,17 @@ jobs:
         if: hashFiles('package-lock.json') != ''
         run: npm run build --if-present
 
-      # Verifica que o Dockerfile builda (sem push) antes do merge -- o publish de verdade
-      # (com push para GHCR) roda em docker-publish.yml, so em push para staging/main.
+      - name: Build Storybook
+        if: hashFiles('package-lock.json') != ''
+        run: npm run build-storybook --if-present
+
+      - name: Upload Storybook artifact
+        if: hashFiles('package-lock.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: storybook-static/
+
       - uses: docker/setup-buildx-action@v3
         if: hashFiles('package-lock.json') != ''
 
