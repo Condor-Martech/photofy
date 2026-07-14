@@ -17,5 +17,7 @@
     "paths": { "@/*": ["./*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // ponytail: subprojetos (worker/, workers/, packages/) têm tsconfig e deps
+  // próprios — não devem entrar no type-check do build do app Next.
+  "exclude": ["node_modules", "worker", "workers", "packages"]
 }

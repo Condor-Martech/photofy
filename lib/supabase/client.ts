@@ -1,8 +1,9 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// Cliente Supabase de browser (chave anônima pública). Usado pelo telão para
-// assinar Realtime. RLS por event_id continua sendo a fronteira de segurança
-// real (02-spec.md §3) — o cliente nunca é a garantia de isolamento.
+// Cliente Supabase de browser (chave anônima pública). Usado pelo telão e
+// pelo painel de moderação para assinar Realtime. RLS por event_id continua
+// sendo a fronteira de segurança real (02-spec.md §3) — o cliente nunca é a
+// garantia de isolamento.
 let cliente: SupabaseClient | undefined;
 
 export function criarClienteBrowser(): SupabaseClient {
