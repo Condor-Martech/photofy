@@ -1,0 +1,99 @@
+{
+  "summary": {
+    "label": "test-a-2cpu-conc2",
+    "n": 8,
+    "completed": 8,
+    "wallClockMs": 118527,
+    "waitMs": {
+      "p50": 68533,
+      "p95": 93595,
+      "max": 93595
+    },
+    "totalMs": {
+      "p50": 93494,
+      "p95": 118525,
+      "max": 118525
+    },
+    "under60s": 2,
+    "under60sPct": 25,
+    "outputSizeMB": {
+      "min": 10.948762,
+      "max": 10.948762,
+      "avg": 10.948762
+    }
+  },
+  "results": [
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994735422,
+      "finishedAt": 1783994760396,
+      "waitMs": 18624,
+      "processMs": 24974,
+      "totalMs": 43598,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994735433,
+      "finishedAt": 1783994760470,
+      "waitMs": 18635,
+      "processMs": 25037,
+      "totalMs": 43672,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994760471,
+      "finishedAt": 1783994785330,
+      "waitMs": 43673,
+      "processMs": 24859,
+      "totalMs": 68532,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994760398,
+      "finishedAt": 1783994785372,
+      "waitMs": 43600,
+      "processMs": 24974,
+      "totalMs": 68574,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994785331,
+      "finishedAt": 1783994810292,
+      "waitMs": 68533,
+      "processMs": 24961,
+      "totalMs": 93494,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994785374,
+      "finishedAt": 1783994810391,
+      "waitMs": 68576,
+      "processMs": 25017,
+      "totalMs": 93593,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994810294,
+      "finishedAt": 1783994835317,
+      "waitMs": 93496,
+      "processMs": 25023,
+      "totalMs": 118519,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783994716798,
+      "startedAt": 1783994810393,
+      "finishedAt": 1783994835323,
+      "waitMs": 93595,
+      "processMs": 24930,
+      "totalMs": 118525,
+      "outputBytes": 10948762
+    }
+  ]
+}

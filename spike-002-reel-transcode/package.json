@@ -1,0 +1,11 @@
+{
+  "name": "spike-002-reel-transcode",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Descartavel - Spike PHF-002. Nunca mergeado em staging/main.",
+  "dependencies": {
+    "bullmq": "^5.34.0",
+    "ioredis": "^5.4.1"
+  }
+}

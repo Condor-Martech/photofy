@@ -1,0 +1,54 @@
+{
+  "summary": {
+    "label": "smoke",
+    "n": 3,
+    "completed": 3,
+    "wallClockMs": 16267,
+    "waitMs": {
+      "p50": 9,
+      "p95": 10646,
+      "max": 10646
+    },
+    "totalMs": {
+      "p50": 10652,
+      "p95": 16266,
+      "max": 16266
+    },
+    "under60s": 3,
+    "under60sPct": 100,
+    "outputSizeMB": {
+      "min": 10.917076,
+      "max": 10.919691,
+      "avg": 10.918593333333334
+    }
+  },
+  "results": [
+    {
+      "queuedAt": 1783993560896,
+      "startedAt": 1783993560905,
+      "finishedAt": 1783993571539,
+      "waitMs": 9,
+      "processMs": 10634,
+      "totalMs": 10643,
+      "outputBytes": 10919691
+    },
+    {
+      "queuedAt": 1783993560896,
+      "startedAt": 1783993560902,
+      "finishedAt": 1783993571548,
+      "waitMs": 6,
+      "processMs": 10646,
+      "totalMs": 10652,
+      "outputBytes": 10919013
+    },
+    {
+      "queuedAt": 1783993560896,
+      "startedAt": 1783993571542,
+      "finishedAt": 1783993577162,
+      "waitMs": 10646,
+      "processMs": 5620,
+      "totalMs": 16266,
+      "outputBytes": 10917076
+    }
+  ]
+}

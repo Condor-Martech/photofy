@@ -1,0 +1,135 @@
+{
+  "summary": {
+    "label": "test-c-6cpu-conc6",
+    "n": 12,
+    "completed": 12,
+    "wallClockMs": 64348,
+    "waitMs": {
+      "p50": 31769,
+      "p95": 34356,
+      "max": 34356
+    },
+    "totalMs": {
+      "p50": 62081,
+      "p95": 64345,
+      "max": 64345
+    },
+    "under60s": 6,
+    "under60sPct": 50,
+    "outputSizeMB": {
+      "min": 10.948762,
+      "max": 10.948762,
+      "avg": 10.948762
+    }
+  },
+  "results": [
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388760,
+      "finishedAt": 1783995420499,
+      "waitMs": 16,
+      "processMs": 31739,
+      "totalMs": 31755,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388767,
+      "finishedAt": 1783995420539,
+      "waitMs": 23,
+      "processMs": 31772,
+      "totalMs": 31795,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388763,
+      "finishedAt": 1783995420771,
+      "waitMs": 19,
+      "processMs": 32008,
+      "totalMs": 32027,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388756,
+      "finishedAt": 1783995421483,
+      "waitMs": 12,
+      "processMs": 32727,
+      "totalMs": 32739,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388765,
+      "finishedAt": 1783995421896,
+      "waitMs": 21,
+      "processMs": 33131,
+      "totalMs": 33152,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995388761,
+      "finishedAt": 1783995423083,
+      "waitMs": 17,
+      "processMs": 34322,
+      "totalMs": 34339,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995420774,
+      "finishedAt": 1783995450825,
+      "waitMs": 32030,
+      "processMs": 30051,
+      "totalMs": 62081,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995420513,
+      "finishedAt": 1783995451030,
+      "waitMs": 31769,
+      "processMs": 30517,
+      "totalMs": 62286,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995420544,
+      "finishedAt": 1783995451097,
+      "waitMs": 31800,
+      "processMs": 30553,
+      "totalMs": 62353,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995421898,
+      "finishedAt": 1783995451367,
+      "waitMs": 33154,
+      "processMs": 29469,
+      "totalMs": 62623,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995421485,
+      "finishedAt": 1783995451823,
+      "waitMs": 32741,
+      "processMs": 30338,
+      "totalMs": 63079,
+      "outputBytes": 10948762
+    },
+    {
+      "queuedAt": 1783995388744,
+      "startedAt": 1783995423100,
+      "finishedAt": 1783995453089,
+      "waitMs": 34356,
+      "processMs": 29989,
+      "totalMs": 64345,
+      "outputBytes": 10948762
+    }
+  ]
+}
