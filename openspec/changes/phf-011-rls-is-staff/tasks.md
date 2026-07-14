@@ -8,54 +8,54 @@
 
 ## FASE 1 — Schema + Migração `phf011`
 
-- [ ] 1.1 Criar `supabase/migrations/20260713130000_phf011_rls_is_staff.sql` com header (autor, PHF-011, referências a `spec.md` / `design.md`) e seções placeholder (profiles → is_staff → enable RLS → policies). **[0.5S]** — design §2
-- [ ] 1.2 Escrever DDL de `public.profiles` (tabela + `comment on`, `enable row level security` sem policies = deny-all). **[0.5S]** — design §2.a. Dep: 1.1
-- [ ] 1.3 Escrever `public.is_staff()` (`SECURITY DEFINER` + `STABLE` + `SET search_path = ''` + `revoke all` + `grant execute to anon, authenticated`). **[0.5S]** — design §2.b, spec cenários 1-3. Dep: 1.2
-- [ ] 1.4 `alter table public.events enable row level security;` e mesma para `public.slideshow_config`. **[0.5S]** — design §2.d cabeçalho. Dep: 1.3
-- [ ] 1.5a Policies de `events` (3: `anon le ativos`, `device le proprio evento`, `staff le tudo`) e `slideshow_config` (2: device, staff). **[1S]** — design §2.d, spec cenários 13-14. Dep: 1.4
-- [ ] 1.5b Policies de `media_items` (3: `anon le aprovado de evento ativo`, `device le proprio evento`, `staff le tudo`). **[1S]** — design §2.d, spec cenários 4-7. Dep: 1.4
-- [ ] 1.5c Policies de `moderation_log`, `consent_record`, `deletion_request` (1 policy staff por tabela, todas com `public.is_staff()`). **[0.5S]** — design §2.d. Dep: 1.4
-- [ ] 1.5d Policies de `devices` (2: `proprio device le a si mesmo` via `nullif(auth.jwt() ->> 'device_id','')::uuid` e `staff le tudo`). **[0.5S]** — design §2.d. Dep: 1.4
-- [ ] 1.6 Adicionar comentários inline com rationale (por que `SECURITY DEFINER`, por que subquery em `events` ativos vs denormalização, por que claim JWT vs join a `devices`). **[0.5S]** — design §5 decisões 1, 3, 4. Dep: 1.5a-d
+- [x] 1.1 Criar `supabase/migrations/20260713130000_phf011_rls_is_staff.sql` com header (autor, PHF-011, referências a `spec.md` / `design.md`) e seções placeholder (profiles → is_staff → enable RLS → policies). **[0.5S]** — design §2
+- [x] 1.2 Escrever DDL de `public.profiles` (tabela + `comment on`, `enable row level security` sem policies = deny-all). **[0.5S]** — design §2.a. Dep: 1.1
+- [x] 1.3 Escrever `public.is_staff()` (`SECURITY DEFINER` + `STABLE` + `SET search_path = ''` + `revoke all` + `grant execute to anon, authenticated`). **[0.5S]** — design §2.b, spec cenários 1-3. Dep: 1.2
+- [x] 1.4 `alter table public.events enable row level security;` e mesma para `public.slideshow_config`. **[0.5S]** — design §2.d cabeçalho. Dep: 1.3
+- [x] 1.5a Policies de `events` (3: `anon le ativos`, `device le proprio evento`, `staff le tudo`) e `slideshow_config` (2: device, staff). **[1S]** — design §2.d, spec cenários 13-14. Dep: 1.4
+- [x] 1.5b Policies de `media_items` (3: `anon le aprovado de evento ativo`, `device le proprio evento`, `staff le tudo`). **[1S]** — design §2.d, spec cenários 4-7. Dep: 1.4
+- [x] 1.5c Policies de `moderation_log`, `consent_record`, `deletion_request` (1 policy staff por tabela, todas com `public.is_staff()`). **[0.5S]** — design §2.d. Dep: 1.4
+- [x] 1.5d Policies de `devices` (2: `proprio device le a si mesmo` via `nullif(auth.jwt() ->> 'device_id','')::uuid` e `staff le tudo`). **[0.5S]** — design §2.d. Dep: 1.4
+- [x] 1.6 Adicionar comentários inline com rationale (por que `SECURITY DEFINER`, por que subquery em `events` ativos vs denormalização, por que claim JWT vs join a `devices`). **[0.5S]** — design §5 decisões 1, 3, 4. Dep: 1.5a-d
 
 ---
 
 ## FASE 2 — Rename `phf082` (resolve colisão de timestamp)
 
-- [ ] 2.1 `git mv supabase/migrations/20260714120000_phf082_audit_log.sql supabase/migrations/20260714120001_phf082_audit_log.sql`. **[0.25S]** — design §6, proposal §Approach.7. Dep: FASE 1 completa
-- [ ] 2.2 Rodar `rg 20260714120000_phf082` para confirmar zero referências ao path antigo em docs/scripts. **[0.25S]**. Dep: 2.1
-- [ ] 2.3 Rodar `supabase db reset` local — confirmar que aplica sem erro (phf011 antes de phf082, `is_staff()` existe quando phf082 referencia). **[0.5S]** — spec cenário 16. Dep: 2.2
+- [x] 2.1 `git mv supabase/migrations/20260714120000_phf082_audit_log.sql supabase/migrations/20260714120001_phf082_audit_log.sql`. **[0.25S]** — design §6, proposal §Approach.7. Dep: FASE 1 completa
+- [x] 2.2 Rodar `rg 20260714120000_phf082` para confirmar zero referências ao path antigo em docs/scripts. **[0.25S]**. Dep: 2.1
+- [ ] 2.3 Rodar `supabase db reset` local — confirmar que aplica sem erro (phf011 antes de phf082, `is_staff()` existe quando phf082 referencia). **[0.5S]** — spec cenário 16. Dep: 2.2 — **Fase 6 (humano)**
 
 ---
 
 ## FASE 3 — Testes pgTAP (`supabase/tests/phf011_rls_is_staff_test.sql`)
 
-- [ ] 3.1 Criar arquivo com header (`begin; select plan(18); ...; select * from finish(); rollback;`) padrão `phf082_audit_log_test.sql`. **[0.5S]** — design §4. Dep: 2.3
-- [ ] 3.2 Escrever fixtures reutilizáveis: helper para criar `auth.users` + `profiles` (staff/organizador/participante), seed eventos A (ativo) e B (encerrado), `media_items` em todos os 4 status por evento, `consent/deletion/moderation_log`. **[1S]** — design §4 setup comum. Dep: 3.1
-- [ ] 3.3 Cenários A (spec §Requirement `is_staff()` isolado, 3 testes): `test_is_staff_admin_true`, `test_is_staff_moderador_true`, `test_is_staff_organizador_participante_anon_false`. **[0.5S]** — spec cenários 1, 2, 3. Dep: 3.2
-- [ ] 3.4 Cenários B (silêncio de moderação em `media_items`, 4 testes): `test_anon_media_items_only_aprovado`, `test_anon_nao_ve_reprovado`, `test_device_le_pendente_proprio_evento`, `test_staff_le_todos_status`. **[1S]** — spec cenários 4, 5, 6, 7. Dep: 3.2
-- [ ] 3.5 Cenários C (isolamento cross-evento, 3 testes): `test_device_cross_event_isolation_media_items`, `test_device_cross_event_isolation_slideshow_config`, `test_staff_admin_cross_event`. **[1S]** — spec cenários 8, 9, 10. Dep: 3.2
-- [ ] 3.6 Cenários D (deny-all escrita cliente, 2 testes com `throws_ok` SQLSTATE 42501): `test_anon_nao_escreve_media_items`, `test_participante_nao_atualiza_media_items`. **[0.5S]** — spec cenários 11, 12. Dep: 3.2
-- [ ] 3.7 Cenários E (`events` + `slideshow_config`, 2 testes): `test_anon_events_apenas_ativos`, `test_device_le_slideshow_proprio_e_nao_outro`. **[0.5S]** — spec cenários 13, 14. Dep: 3.2
-- [ ] 3.8 Cenários F+G (rollback safety + ordenação, 2 testes): `test_profiles_deny_authenticated` (smoke deny-all) e `test_anon_slideshow_config_deny`. Cenário 15 (rollback preserva `is_staff()`) e cenário 16 (ordenação) validados manualmente em FASE 6.1-6.2. **[0.5S]** — spec cenários 15, 16. Dep: 3.2
-- [ ] 3.9 Rodar `supabase test db` — todos os 18 asserts passam verde. **[0.5S]** — spec §Success Criteria. Dep: 3.3-3.8, 2.3
+- [x] 3.1 Criar arquivo com header (`begin; select plan(18); ...; select * from finish(); rollback;`) padrão `phf082_audit_log_test.sql`. **[0.5S]** — design §4. Dep: 2.3
+- [x] 3.2 Escrever fixtures reutilizáveis: helper para criar `auth.users` + `profiles` (staff/organizador/participante), seed eventos A (ativo) e B (encerrado), `media_items` em todos os 4 status por evento, `consent/deletion/moderation_log`. **[1S]** — design §4 setup comum. Dep: 3.1
+- [x] 3.3 Cenários A (spec §Requirement `is_staff()` isolado, 3 testes): `test_is_staff_admin_true`, `test_is_staff_moderador_true`, `test_is_staff_organizador_participante_anon_false`. **[0.5S]** — spec cenários 1, 2, 3. Dep: 3.2
+- [x] 3.4 Cenários B (silêncio de moderação em `media_items`, 4 testes): `test_anon_media_items_only_aprovado`, `test_anon_nao_ve_reprovado`, `test_device_le_pendente_proprio_evento`, `test_staff_le_todos_status`. **[1S]** — spec cenários 4, 5, 6, 7. Dep: 3.2
+- [x] 3.5 Cenários C (isolamento cross-evento, 3 testes): `test_device_cross_event_isolation_media_items`, `test_device_cross_event_isolation_slideshow_config`, `test_staff_admin_cross_event`. **[1S]** — spec cenários 8, 9, 10. Dep: 3.2
+- [x] 3.6 Cenários D (deny-all escrita cliente, 2 testes com `throws_ok` SQLSTATE 42501): `test_anon_nao_escreve_media_items`, `test_participante_nao_atualiza_media_items`. **[0.5S]** — spec cenários 11, 12. Dep: 3.2
+- [x] 3.7 Cenários E (`events` + `slideshow_config`, 2 testes): `test_anon_events_apenas_ativos`, `test_device_le_slideshow_proprio_e_nao_outro`. **[0.5S]** — spec cenários 13, 14. Dep: 3.2
+- [x] 3.8 Cenários F+G (rollback safety + ordenação, 2 testes): `test_profiles_deny_authenticated` (smoke deny-all) e `test_anon_slideshow_config_deny`. Cenário 15 (rollback preserva `is_staff()`) e cenário 16 (ordenação) validados manualmente em FASE 6.1-6.2. **[0.5S]** — spec cenários 15, 16. Dep: 3.2
+- [ ] 3.9 Rodar `supabase test db` — todos os 18 asserts passam verde. **[0.5S]** — spec §Success Criteria. Dep: 3.3-3.8, 2.3 — **Fase 6 (humano)**
 
 ---
 
 ## FASE 4 — Feature flag / Rollback documentado
 
-- [ ] 4.1 Criar `docs/feature-flags.md` (proposal §Rollback, design §3): explica que PHF-011 usa **migração reversível** como flag (não runtime flag) e por que. **[0.5S]** — proposal §Feature flag
-- [ ] 4.2 Colar snippet SQL exato de `phf011_down.sql` inline no doc (drops em ordem inversa: devices → deletion_request → consent_record → moderation_log → media_items → slideshow_config → events; **NÃO dropar** `is_staff()` nem `profiles` nem `disable RLS`). **[0.5S]** — design §3 snippet. Dep: 4.1
-- [ ] 4.3 Documentar 3 gatilhos de rollback: (a) data leak cross-evento detectado; (b) quebra de silêncio de moderação em prod/staging; (c) falha crítica de performance em galeria pública. **[0.25S]** — proposal §Rollback Plan.3. Dep: 4.1
-- [ ] 4.4 Documentar governança de rollback em prod (2 aprovações: 1 tech + 1 produto/segurança, per CLAUDE.md governança alta); citar rollback do rename via `git revert` do PR. **[0.25S]** — CLAUDE.md §Governança IA por risco. Dep: 4.1
+- [x] 4.1 Criar `docs/feature-flags.md` (proposal §Rollback, design §3): explica que PHF-011 usa **migração reversível** como flag (não runtime flag) e por que. **[0.5S]** — proposal §Feature flag
+- [x] 4.2 Colar snippet SQL exato de `phf011_down.sql` inline no doc (drops em ordem inversa: devices → deletion_request → consent_record → moderation_log → media_items → slideshow_config → events; **NÃO dropar** `is_staff()` nem `profiles` nem `disable RLS`). **[0.5S]** — design §3 snippet. Dep: 4.1
+- [x] 4.3 Documentar 3 gatilhos de rollback: (a) data leak cross-evento detectado; (b) quebra de silêncio de moderação em prod/staging; (c) falha crítica de performance em galeria pública. **[0.25S]** — proposal §Rollback Plan.3. Dep: 4.1
+- [x] 4.4 Documentar governança de rollback em prod (2 aprovações: 1 tech + 1 produto/segurança, per CLAUDE.md governança alta); citar rollback do rename via `git revert` do PR. **[0.25S]** — CLAUDE.md §Governança IA por risco. Dep: 4.1
 
 ---
 
 ## FASE 5 — Documentação técnica
 
-- [ ] 5.1 `rg is_staff docs/` — se houver referência em `docs/observability.md` ou outros, atualizar apontando para migração PHF-011 como fonte canônica. **[0.25S]** — proposal §Affected Areas
-- [ ] 5.2 Marcar PHF-011 como "em progresso" em `03-tareas.md` linha 15 (opcional; muitos repos preferem só via issue tracker). **[0.25S]** — proposal §Metadados
-- [ ] 5.3 Confirmar que `02-spec.md` §5 não precisa update (cenários já cobertos por este `spec.md` delta; documentar em comentário no PR). **[0.25S]** — spec §Notas de rastreabilidade
+- [x] 5.1 `rg is_staff docs/` — atualizado `docs/observability.md:9` com novo timestamp `20260714120001_phf082_audit_log.sql`; referência a `is_staff()` em linha 30 já aponta a PHF-011 como fonte única. **[0.25S]** — proposal §Affected Areas
+- [ ] 5.2 Marcar PHF-011 como "em progresso" em `03-tareas.md` linha 15 (opcional; muitos repos preferem só via issue tracker). **[0.25S]** — proposal §Metadados — **deixado para o humano no PR**
+- [x] 5.3 Confirmar que `02-spec.md` §5 não precisa update (cenários já cobertos por este `spec.md` delta; documentar em comentário no PR). **[0.25S]** — spec §Notas de rastreabilidade — verificado (`rg` mostra RLS mencionada em alto nível apenas, nada crítico)
 
 ---
 

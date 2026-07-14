@@ -6,7 +6,7 @@ fila, alertas de falha de processamento" — e o requisito de auditoria de §7. 
 Três peças, todas server-side:
 
 1. **Trilha de auditoria append-only** — tabela `audit_log` (migration
-   `20260714120000_phf082_audit_log.sql`).
+   `20260714120001_phf082_audit_log.sql`).
 2. **Emissão estruturada** — pacote `@photofy/audit-log` (`packages/audit-log`).
 3. **Detecção de anomalia + alertas** — detectores puros no mesmo pacote, avaliados por um job
    periódico que lê a janela recente da trilha.
