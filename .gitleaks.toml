@@ -6,8 +6,12 @@ title = "Photofy gitleaks config"
 useDefault = true
 
 [allowlist]
-description = "Placeholders de exemplo e documentação não são credenciais reais"
+description = "Placeholders de exemplo/documentação e tokens de staging em spike branch descartada"
 paths = [
   '''\.env\.example$''',
   '''docs/secrets-management\.md$''',
+  # spikes/ é descartável (CLAUDE.md: "nunca é mergeada"). Os JWTs do PHF-003 são
+  # tokens de STAGING (não prod), commitados em spike branch que nunca chegou a
+  # main/staging. Rotação do JWT_SECRET de staging tracked em issue separada.
+  '''spikes/phf-003-realtime-batch-approval/.*\.mjs$''',
 ]
