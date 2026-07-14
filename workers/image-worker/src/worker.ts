@@ -1,5 +1,6 @@
 import { Worker } from 'bullmq';
 import { handleImageJob, type ImageJobData, type ImageJobDeps } from './job-handler.js';
+import { isolateFailedMedia } from './retry-policy.js';
 
 export const IMAGE_QUEUE = 'image-processing';
 
@@ -23,10 +24,20 @@ export function startImageWorker(deps: ImageJobDeps): Worker<ImageJobData> {
     },
   );
 
-  // Retry/backoff and the isolated "erro" status are PHF-033; here we only
-  // surface the failure so the queue's default retry policy can act on it.
+  // PHF-033: o retry/backoff vem das mediaJobOptions aplicadas no enqueue; aqui,
+  // quando as tentativas esgotam, isolamos o item em status "erro" para reprocesso
+  // manual. Nunca ha aviso ao participante (silencio de moderacao, CLAUDE.md).
   worker.on('failed', (job, err) => {
     console.error(`image job ${job?.id ?? '?'} failed: ${err.message}`);
+    if (!job) return;
+    void isolateFailedMedia(
+      {
+        mediaId: job.data.mediaId,
+        attemptsMade: job.attemptsMade,
+        maxAttempts: job.opts.attempts ?? 1,
+      },
+      deps.media,
+    ).catch((e) => console.error(`failed to isolate media ${job.data.mediaId}: ${e}`));
   });
 
   return worker;
