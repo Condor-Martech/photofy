@@ -20,6 +20,12 @@ Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, ...). Commits com uso 
 
 Use o template em `.github/PULL_REQUEST_TEMPLATE.md`. Todo PR referencia a issue que fecha (ex.: `PHO-N`) e cobre com teste o(s) cenário(s) Gherkin correspondente(s) de `02-spec.md` §5.
 
+## Design system
+
+Guia de uso completo (tokens, componentes, quando usar cada um, mobile-first, como propor componente novo): [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
+
+Os componentes estão em `components/ui/`, as stories em `stories/` e os tokens em `src/design-tokens/`.
+
 ## Regras de domínio inegociáveis (não "simplificar" mesmo se parecer redundante)
 
 - **Silêncio de moderação por design**: o sistema NUNCA comunica ao participante nenhuma decisão de moderação (aprovado/reprovado), em nenhum fluxo, em nenhuma tela.
