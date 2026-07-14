@@ -12,3 +12,11 @@ export type {
   ImageJobDeps,
 } from './job-handler.js';
 export { startImageWorker, IMAGE_QUEUE } from './worker.js';
+export {
+  isolateFailedMedia,
+  retriesExhausted,
+  mediaJobOptions,
+  MEDIA_JOB_ATTEMPTS,
+  MEDIA_JOB_BACKOFF_MS,
+} from './retry-policy.js';
+export type { FailureContext } from './retry-policy.js';
