@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import { colors, typography, spacing, breakpoints, borderRadius, shadows } from "./src/design-tokens/tokens";
 
+// Mobile-first é requisito não-negociável (SPEC §1.1 / Epic 10): a persona Participante usa celular.
 const config: Config = {
   content: [
     "./app/**/*.{ts,tsx}",
@@ -37,8 +38,8 @@ const config: Config = {
       px: "1px",
       ...spacing,
     },
-    fontFamily: typography.fontFamily,
-    fontSize: typography.fontSize,
+    fontFamily: typography.fontFamily as unknown as Record<string, string[]>,
+    fontSize: typography.fontSize as unknown as Record<string, [string, { lineHeight: string }]>,
     fontWeight: typography.fontWeight,
     letterSpacing: typography.letterSpacing,
     borderRadius: {
