@@ -1,9 +1,9 @@
 {
-  "name": "photofy-worker",
+  "name": "@photofy/orchestrator",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Worker de processamento assincrono de midia (Epic 3). PHF-031: reel transcode.",
+  "description": "Orquestrador BullMQ + Redis: enfileira e monitora jobs de imagem/reel (Epic 3).",
   "scripts": {
     "start": "node src/index.js",
     "test": "node --test"

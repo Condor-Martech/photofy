@@ -54,11 +54,11 @@ jobs:
           cache-from: type=gha,scope=app
           cache-to: type=gha,mode=max,scope=app
 
-      - name: Docker build worker (verificacao, sem push)
+      - name: Docker build orchestrator (verificacao, sem push)
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./worker/Dockerfile
+          file: ./workers/orchestrator/Dockerfile
           push: false
-          cache-from: type=gha,scope=worker
-          cache-to: type=gha,mode=max,scope=worker
+          cache-from: type=gha,scope=orchestrator
+          cache-to: type=gha,mode=max,scope=orchestrator
