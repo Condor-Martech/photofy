@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Orquestrador BullMQ + Redis: enfileira e monitora jobs de imagem/reel (Epic 3).",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node --env-file-if-exists=../../.env src/index.js",
     "test": "node --test"
   },
   "dependencies": {
