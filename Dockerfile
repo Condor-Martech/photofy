@@ -1,5 +1,5 @@
 # Multi-stage build para o app Next.js do Photofy.
-# Pressupoe next.config.js com `output: 'standalone'` (ver PHF-020 -- scaffold do projeto).
+# Pressupoe next.config.ts com `output: 'standalone'` (ver PHF-020 -- scaffold do projeto).
 # Guardado no CI ate o scaffold (package.json/package-lock.json) existir na base branch.
 
 FROM node:22-alpine AS deps
