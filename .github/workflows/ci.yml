@@ -10,47 +10,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+          run_install: false
+
       - uses: actions/setup-node@v4
-        if: hashFiles('package-lock.json') != ''
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        if: hashFiles('package-lock.json') != ''
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        if: hashFiles('package-lock.json') != ''
-        run: npm run lint --if-present
+        run: pnpm lint
 
-      - name: Test
-        if: hashFiles('package-lock.json') != ''
-        run: npm test --if-present
+      - name: Test (app + packages + workers)
+        run: pnpm test:all
 
-      - name: Build
-        if: hashFiles('package-lock.json') != ''
-        run: npm run build --if-present
+      - name: Typecheck (app + packages)
+        run: pnpm typecheck
+
+      - name: Build app
+        run: pnpm build
 
       - name: Build Storybook
-        if: hashFiles('package-lock.json') != ''
-        run: npm run build-storybook --if-present
+        run: pnpm build-storybook
 
-      - name: Upload Storybook artifact
-        if: hashFiles('package-lock.json') != ''
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: storybook-static
           path: storybook-static/
 
       - uses: docker/setup-buildx-action@v3
-        if: hashFiles('package-lock.json') != ''
 
-      - name: Docker build (verificação, sem push)
-        if: hashFiles('package-lock.json') != ''
+      - name: Docker build app (verificacao, sem push)
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=app
+          cache-to: type=gha,mode=max,scope=app
+
+      - name: Docker build worker (verificacao, sem push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./worker/Dockerfile
+          push: false
+          cache-from: type=gha,scope=worker
+          cache-to: type=gha,mode=max,scope=worker
