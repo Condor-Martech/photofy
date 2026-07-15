@@ -12,14 +12,13 @@ COPY packages/audit-log/package.json ./packages/audit-log/
 COPY packages/media-validation/package.json ./packages/media-validation/
 COPY packages/rate-limiting/package.json ./packages/rate-limiting/
 COPY workers/image-worker/package.json ./workers/image-worker/
-COPY worker/package.json ./worker/
+COPY workers/orchestrator/package.json ./workers/orchestrator/
 RUN pnpm install --frozen-lockfile --filter=photofy...
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/workers ./workers
-COPY --from=deps /app/worker ./worker
 COPY . .
 RUN pnpm --filter=photofy build
 

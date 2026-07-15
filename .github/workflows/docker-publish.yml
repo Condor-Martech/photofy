@@ -44,14 +44,14 @@ jobs:
           cache-from: type=gha,scope=app
           cache-to: type=gha,mode=max,scope=app
 
-      - name: Build & push worker
+      - name: Build & push orchestrator
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./worker/Dockerfile
+          file: ./workers/orchestrator/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.vars.outputs.repo_lower }}/worker:${{ steps.vars.outputs.branch_tag }}
-            ghcr.io/${{ steps.vars.outputs.repo_lower }}/worker:${{ steps.vars.outputs.sha_tag }}
-          cache-from: type=gha,scope=worker
-          cache-to: type=gha,mode=max,scope=worker
+            ghcr.io/${{ steps.vars.outputs.repo_lower }}/orchestrator:${{ steps.vars.outputs.branch_tag }}
+            ghcr.io/${{ steps.vars.outputs.repo_lower }}/orchestrator:${{ steps.vars.outputs.sha_tag }}
+          cache-from: type=gha,scope=orchestrator
+          cache-to: type=gha,mode=max,scope=orchestrator
