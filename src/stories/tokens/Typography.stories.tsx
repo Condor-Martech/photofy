@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { typography } from '../../src/design-tokens/tokens';
+import { typography } from '../../design-tokens/tokens';
 
 function FontScale() {
   return (

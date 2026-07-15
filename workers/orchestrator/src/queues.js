@@ -3,9 +3,10 @@
 import { Queue, Worker } from 'bullmq';
 
 // Uma fila por tipo de mídia. Epic 3 pluga os processadores reais nestas filas.
+// BullMQ v5+ rejeita `:` no nome (usa como separador interno de Redis keys).
 export const QUEUE_NAMES = {
-  image: 'media:image',
-  reel: 'media:reel',
+  image: 'media-image',
+  reel: 'media-reel',
 };
 
 // Retry com backoff exponencial: falha transitória re-enfileira em vez de morrer (base para PHF-033).

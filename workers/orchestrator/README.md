@@ -6,17 +6,17 @@ Esqueleto do worker BullMQ + Redis para processamento assíncrono de mídia. **S
 
 | Fila | Constante | Processador (Epic 3) |
 | --- | --- | --- |
-| `media:image` | `QUEUE_NAMES.image` | PHF-030 — `src/processors/image.js` |
-| `media:reel` | `QUEUE_NAMES.reel` | PHF-031 — `src/processors/reel.js` |
+| `media-image` | `QUEUE_NAMES.image` | PHF-030 — `src/processors/image.js` |
+| `media-reel` | `QUEUE_NAMES.reel` | PHF-031 — `src/processors/reel.js` |
 
 Os processadores atuais lançam `not implemented` de propósito: qualquer job enfileirado antes da Epic 3 vai para `erro` (visível) em vez de ser marcado como concluído silenciosamente.
 
 ## Rodar
 
 ```sh
-npm install
-npm test            # smoke test, não precisa de Redis
-REDIS_URL=redis://localhost:6379 npm start
+pnpm install                                                 # na raiz do monorepo
+pnpm --filter=@photofy/orchestrator test                     # smoke, não precisa de Redis
+REDIS_URL=redis://localhost:6379 pnpm --filter=@photofy/orchestrator start
 ```
 
 ## Onde a Epic 3 entra
