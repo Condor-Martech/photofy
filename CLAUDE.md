@@ -24,7 +24,7 @@ Use o template em `.github/PULL_REQUEST_TEMPLATE.md`. Todo PR referencia a issue
 
 Guia de uso completo (tokens, componentes, quando usar cada um, mobile-first, como propor componente novo): [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 
-Os componentes estão em `components/ui/`, as stories em `stories/` e os tokens em `src/design-tokens/`.
+Os componentes estão em `src/components/ui/`, as stories em `src/stories/` e os tokens em `src/design-tokens/`.
 
 ## Regras de domínio inegociáveis (não "simplificar" mesmo se parecer redundante)
 
@@ -42,8 +42,81 @@ Os componentes estão em `components/ui/`, as stories em `stories/` e os tokens 
 
 ## CI
 
-- `ci.yml`: lint, testes unitários, build, e um `docker build` de verificação (sem push) — tudo guardado por `hashFiles('package-lock.json')` até o scaffold do projeto ser mergeado.
+- `ci.yml`: `pnpm install --frozen-lockfile`, lint, `pnpm test:all` (recursivo em todos os workspaces), `pnpm typecheck` (sub-packages), build do app, build do Storybook, e **dois** `docker build` de verificação (sem push) — um para o app raiz e outro para o orchestrator. Sem guards `hashFiles` — o scaffold já existe.
 - `secret-scan.yml`: gitleaks em todo PR/push para `staging`/`main` — varre diff, árvore e histórico; falha se achar credencial. Sem guard de scaffold: roda sempre. Ver `docs/secrets-management.md` (PHF-081).
 - `pr-review.yml`: agente revisor via **Gemini CLI** (`google-github-actions/run-gemini-cli@v0`, `GEMINI_CLI_TRUST_WORKSPACE=true`) — nunca `anthropics/claude-code-action`, pois este projeto não usa `ANTHROPIC_API_KEY` (Claude é por assinatura local). Lê `CLAUDE.md` + `02-spec.md` §5 (Gherkin) + diff do PR; sua aprovação é necessária mas não suficiente — revisão humana continua obrigatória.
-- `docker-publish.yml`: builda a imagem (`Dockerfile` na raiz, multi-stage, non-root, pressupõe `next.config.js` com `output: 'standalone'`) e publica em **GHCR** a cada push em `staging` ou `main` (após merge, nunca em PR). Login via `GITHUB_TOKEN` padrão (`packages: write`), sem secret adicional. Tags: `ghcr.io/<owner>/<repo>:staging` / `:main` + `:<branch>-<sha curto>`. Guardado por `hashFiles('package-lock.json')` como os demais workflows.
+- `docker-publish.yml`: builda e publica **duas imagens** em **GHCR** a cada push em `staging` ou `main` (após merge, nunca em PR):
+  - App raiz: `ghcr.io/<owner>/<repo>:{staging|main}` + `:<branch>-<sha curto>`. `Dockerfile` na raiz, multi-stage, non-root, pressupõe `next.config.ts` com `output: 'standalone'`.
+  - Orchestrator: `ghcr.io/<owner>/<repo>/orchestrator:{staging|main}` + `:<branch>-<sha curto>`. `workers/orchestrator/Dockerfile`, buildado a partir do contexto raiz.
+  Login via `GITHUB_TOKEN` padrão (`packages: write`), sem secret adicional. Quando `workers/image-worker` for wireado em produção, soma terceira imagem `ghcr.io/<owner>/<repo>/image-worker`.
 - `promote.yml`: `workflow_dispatch` manual, disparado só após a validação de QA em `staging` (ver Fluxo acima). Abre (ou reaproveita, se já existir) o PR `staging` → `main` via `gh pr create` — nunca faz merge. O merge em `main` continua exigindo aprovação humana + CI verde via branch protection; este workflow nunca automatiza o gate final de produção.
+
+## Instalação e comandos
+
+Monorepo **pnpm workspaces**. Pré-requisitos: Node 22, `corepack enable`.
+
+```bash
+pnpm install              # instala tudo (app + packages + workers, um único pnpm-lock.yaml)
+pnpm dev                  # Next.js em localhost:3000
+pnpm lint                 # ESLint no app
+pnpm test                 # vitest só do app (rápido)
+pnpm test:all             # vitest recursivo em todos os workspaces
+pnpm typecheck            # tsc em cada sub-package (root está pendente de fix, ver deuda técnica em issue separada)
+pnpm build                # Next.js production build (output: standalone)
+pnpm build-storybook      # Storybook estático
+pnpm storybook            # Storybook em localhost:6006
+```
+
+Rodar comando em um workspace específico:
+
+```bash
+pnpm --filter=@photofy/image-worker test
+pnpm --filter=@photofy/orchestrator start
+pnpm --filter=@photofy/media-validation typecheck
+```
+
+Adicionar dependência:
+
+```bash
+pnpm --filter=@photofy/image-worker add sharp     # dep runtime de um package
+pnpm --filter=photofy add lucide-react            # dep runtime do app raiz
+pnpm add -Dw typescript                            # dev dep compartilhada em toda a raiz (-w = workspace root)
+```
+
+## Layout do repositório
+
+```text
+photofy/
+├── src/
+│   ├── app/                   # Next.js App Router (rotas reais)
+│   ├── components/            # UI shadcn + moderacao + telao
+│   ├── lib/                   # Business logic do app (admin, consent, dispositivos, ...)
+│   ├── stories/               # Storybook stories + tokens + assets
+│   └── design-tokens/         # tokens.ts consumido por tailwind.config.ts
+├── packages/                  # @photofy/* — libs compartilhadas (ainda não wireadas no app)
+│   ├── audit-log/             # PHF-082
+│   ├── media-validation/      # PHF-032
+│   └── rate-limiting/         # PHF-080
+├── workers/                   # Processos background (Docker Swarm)
+│   ├── orchestrator/          # BullMQ + Redis (PHF-013, contém reel/ até PHF-031)
+│   └── image-worker/          # PHF-030 (sharp, file-type)
+├── supabase/                  # migrations + pgTAP tests
+├── scripts/                   # backup.sh, restore-verify.sh
+├── docs/                      # observability, secrets, storage, backup
+├── .storybook/
+├── .github/workflows/
+├── Dockerfile                 # app Next.js standalone
+├── pnpm-workspace.yaml
+├── pnpm-lock.yaml             # ÚNICO lockfile do monorepo
+├── .npmrc                     # node-linker=hoisted (compat Next.js standalone)
+└── ...
+```
+
+## Como criar um package novo
+
+1. `mkdir packages/<nome>`
+2. `package.json` com `"name": "@photofy/<nome>"`, `"private": true`, `"type": "module"`, `"exports": { ".": "./src/index.ts" }`.
+3. `tsconfig.json` estendendo do padrão (copiar de `packages/media-validation/`).
+4. `vitest.config.ts` com `css: { postcss: { plugins: [] } }` inline (evita subir a árvore até o postcss root que exige Tailwind).
+5. `pnpm install` na raiz — o pnpm detecta e linka via `pnpm-workspace.yaml`.
+6. Consumir do app: `import { foo } from "@photofy/<nome>"` e adicionar em `dependencies` do app raiz: `"@photofy/<nome>": "workspace:*"`.
