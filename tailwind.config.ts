@@ -3,8 +3,6 @@ import { colors, typography, spacing, breakpoints, borderRadius, shadows } from 
 
 const config: Config = {
   content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
   theme: {

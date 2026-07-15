@@ -19,7 +19,7 @@ Definidos em `src/design-tokens/tokens.ts` e mapeados para Tailwind em `tailwind
 | `error`     | `bg-error-*`          | Erro, acao destrutiva                      |
 | `info`      | `bg-info-*`           | Informacao, toast informativo              |
 
-Para cores semanticas (componentes shadcn) usar as variaveis CSS em `app/globals.css`:
+Para cores semanticas (componentes shadcn) usar as variaveis CSS em `src/app/globals.css`:
 
 - `bg-primary`, `bg-secondary`, `bg-muted`, `bg-accent`, `bg-destructive`
 - `text-primary-foreground`, `text-secondary-foreground`, etc.
@@ -72,42 +72,42 @@ Usar `gap-{n}`, `p-{n}`, `m-{n}`, `space-x-{n}` do Tailwind — **nunca valores 
 
 | Componente  | Path                          | Quando usar                        | Variantes                                                       |
 | ----------- | ----------------------------- | ---------------------------------- | --------------------------------------------------------------- |
-| **Button**  | `components/ui/button.tsx`    | Acao principal ou secundaria       | `default`, `outline`, `secondary`, `ghost`, `destructive`, `link` |
+| **Button**  | `src/components/ui/button.tsx`    | Acao principal ou secundaria       | `default`, `outline`, `secondary`, `ghost`, `destructive`, `link` |
 |             |                               |                                    | Size: `default`, `xs`, `sm`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` |
-| **Input**   | `components/ui/input.tsx`     | Entrada de texto livre             | Aceita `type`, `placeholder`, `disabled`, `aria-invalid`        |
-| **Select**  | `components/ui/select.tsx`    | Selecao unica em lista pre-definida | Composicao: `Select` > `SelectTrigger` + `SelectValue` > `SelectContent` > `SelectItem` |
-| **Checkbox**| `components/ui/checkbox.tsx`  | Opcao booleana, multipla escolha   | `checked`, `defaultChecked`, `disabled`, `aria-invalid`         |
-| **RadioGroup**| `components/ui/radio-group.tsx` | Opcao unica entre poucas alternativas | `RadioGroup` > `RadioGroupItem`, aceita `defaultValue`         |
-| **Badge**   | `components/ui/badge.tsx`     | Status, tag, contagem              | `default`, `secondary`, `destructive`, `outline`, `ghost`, `link` |
-| **Avatar**  | `components/ui/avatar.tsx`    | Foto de perfil ou placeholder      | Size: `sm`, `default`, `lg`. Subcomponentes: `AvatarImage`, `AvatarFallback`, `AvatarBadge`, `AvatarGroup` |
+| **Input**   | `src/components/ui/input.tsx`     | Entrada de texto livre             | Aceita `type`, `placeholder`, `disabled`, `aria-invalid`        |
+| **Select**  | `src/components/ui/select.tsx`    | Selecao unica em lista pre-definida | Composicao: `Select` > `SelectTrigger` + `SelectValue` > `SelectContent` > `SelectItem` |
+| **Checkbox**| `src/components/ui/checkbox.tsx`  | Opcao booleana, multipla escolha   | `checked`, `defaultChecked`, `disabled`, `aria-invalid`         |
+| **RadioGroup**| `src/components/ui/radio-group.tsx` | Opcao unica entre poucas alternativas | `RadioGroup` > `RadioGroupItem`, aceita `defaultValue`         |
+| **Badge**   | `src/components/ui/badge.tsx`     | Status, tag, contagem              | `default`, `secondary`, `destructive`, `outline`, `ghost`, `link` |
+| **Avatar**  | `src/components/ui/avatar.tsx`    | Foto de perfil ou placeholder      | Size: `sm`, `default`, `lg`. Subcomponentes: `AvatarImage`, `AvatarFallback`, `AvatarBadge`, `AvatarGroup` |
 
 ### Dados
 
 | Componente    | Path                              | Quando usar                          | Subcomponentes                                                   |
 | ------------- | --------------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
-| **Table**     | `components/ui/table.tsx`         | Lista tabular com colunas            | `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableCaption` |
-| **Card**      | `components/ui/card.tsx`          | Bloco autonomo de conteudo           | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` |
-| **ListItem**  | `components/ui/list-item.tsx`     | Item de lista vertical               | Variant: `default`, `interactive`, `static`. Sub: `ListItemLeading`, `ListItemContent`, `ListItemTitle`, `ListItemDescription`, `ListItemTrailing` |
-| **EmptyState**| `components/ui/empty-state.tsx`   | Estado vazio (sem dados, erro, etc.) | Size: `default`, `compact`, `fullpage`. Sub: `EmptyStateIcon`, `EmptyStateTitle`, `EmptyStateDescription`, `EmptyStateAction` |
+| **Table**     | `src/components/ui/table.tsx`         | Lista tabular com colunas            | `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableCaption` |
+| **Card**      | `src/components/ui/card.tsx`          | Bloco autonomo de conteudo           | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` |
+| **ListItem**  | `src/components/ui/list-item.tsx`     | Item de lista vertical               | Variant: `default`, `interactive`, `static`. Sub: `ListItemLeading`, `ListItemContent`, `ListItemTitle`, `ListItemDescription`, `ListItemTrailing` |
+| **EmptyState**| `src/components/ui/empty-state.tsx`   | Estado vazio (sem dados, erro, etc.) | Size: `default`, `compact`, `fullpage`. Sub: `EmptyStateIcon`, `EmptyStateTitle`, `EmptyStateDescription`, `EmptyStateAction` |
 
 ### Overlay
 
 | Componente | Path                          | Quando usar                              | Props especiais                               |
 | ---------- | ----------------------------- | ---------------------------------------- | --------------------------------------------- |
-| **Dialog** | `components/ui/dialog.tsx`    | Modal de confirmacao, formulario          | `showClose={true/false}`                      |
-| **Drawer** | `components/ui/drawer.tsx`    | Painel lateral / bottom sheet (mobile)    | `side`: `bottom` (default), `top`, `left`, `right`. `showClose`, `showHandle` |
-| **Toast**  | `components/ui/toast.tsx`     | Feedback temporario nao-bloqueante        | Envolver app com `<Toaster>`. Tipos: `success`, `error`, `warning`, `info` |
-| **Tooltip**| `components/ui/tooltip.tsx`   | Explicacao curta ao hover/focus           | Envolver com `<TooltipProvider>`. `side`: `top` (default), `bottom`, `left`, `right` |
-| **Popover**| `components/ui/popover.tsx`   | Conteudo contextual flutuante             | `side`, `align`. Sub: `PopoverTitle`, `PopoverDescription`, `PopoverArrow` |
+| **Dialog** | `src/components/ui/dialog.tsx`    | Modal de confirmacao, formulario          | `showClose={true/false}`                      |
+| **Drawer** | `src/components/ui/drawer.tsx`    | Painel lateral / bottom sheet (mobile)    | `side`: `bottom` (default), `top`, `left`, `right`. `showClose`, `showHandle` |
+| **Toast**  | `src/components/ui/toast.tsx`     | Feedback temporario nao-bloqueante        | Envolver app com `<Toaster>`. Tipos: `success`, `error`, `warning`, `info` |
+| **Tooltip**| `src/components/ui/tooltip.tsx`   | Explicacao curta ao hover/focus           | Envolver com `<TooltipProvider>`. `side`: `top` (default), `bottom`, `left`, `right` |
+| **Popover**| `src/components/ui/popover.tsx`   | Conteudo contextual flutuante             | `side`, `align`. Sub: `PopoverTitle`, `PopoverDescription`, `PopoverArrow` |
 
 ### Layout
 
 | Componente    | Path                              | Quando usar                          | Props                                              |
 | ------------- | --------------------------------- | ------------------------------------ | -------------------------------------------------- |
-| **Stack**     | `components/ui/stack.tsx`         | Layout unidimensional (flex)         | `direction`, `spacing`, `align`, `justify`, `wrap`. Atalhos: `<HStack>`, `<VStack>` |
-| **Grid**      | `components/ui/grid.tsx`          | Layout bidimensional (grid)          | `cols` (number ou objeto responsivo `{base, sm, md, lg, xl}`), `gap`, `align`, `justify` |
-| **Container** | `components/ui/container.tsx`     | Wrapper centralizado com max-width   | `size`: `sm`, `md`, `lg` (default), `xl`, `full`. `padding`: `none`, `sm`, `md` (default), `lg` |
-| **AdaptiveNav**| `components/ui/navigation.tsx`    | Navegacao adaptativa mobile/desktop  | `items: NavItem[]`. Mobile: `BottomNav` (fixed bottom). Desktop: `Sidebar` (w-56) |
+| **Stack**     | `src/components/ui/stack.tsx`         | Layout unidimensional (flex)         | `direction`, `spacing`, `align`, `justify`, `wrap`. Atalhos: `<HStack>`, `<VStack>` |
+| **Grid**      | `src/components/ui/grid.tsx`          | Layout bidimensional (grid)          | `cols` (number ou objeto responsivo `{base, sm, md, lg, xl}`), `gap`, `align`, `justify` |
+| **Container** | `src/components/ui/container.tsx`     | Wrapper centralizado com max-width   | `size`: `sm`, `md`, `lg` (default), `xl`, `full`. `padding`: `none`, `sm`, `md` (default), `lg` |
+| **AdaptiveNav**| `src/components/ui/navigation.tsx`    | Navegacao adaptativa mobile/desktop  | `items: NavItem[]`. Mobile: `BottomNav` (fixed bottom). Desktop: `Sidebar` (w-56) |
 
 ---
 
@@ -171,13 +171,13 @@ Container
 1. Abrir um issue no Multica (prefixo `PHF`, workspace `photofy`).
 2. Incluir: contexto de uso, rascunho de API (props + variantes), referencia visual (se aplicavel).
 3. Se o componente ja existe em shadcn/ui (ver `https://ui.shadcn.com`), preferir `npx shadcn add` e customizar.
-4. Se for componente novo, criar em `components/ui/` seguindo o padrao:
+4. Se for componente novo, criar em `src/components/ui/` seguindo o padrao:
    - Nome do arquivo: `kebab-case.tsx`
    - Subcomponentes exportados individualmente (nao como objeto)
    - `data-slot` para identificacao em testes
-   - `cn()` da `lib/utils` para merge de classes
+   - `cn()` da `@/lib/utils` para merge de classes
    - Variantes com `class-variance-authority` (cva) quando aplicavel
-5. Criar story em `stories/` com:
+5. Criar story em `src/stories/` com:
    - Controles (args) para todas as props relevantes
    - Viewport configurado com breakpoints do projeto
    - Addon a11y ativo
@@ -188,8 +188,8 @@ Container
 ## Storybook
 
 ```bash
-npm run storybook    # dev em localhost:6006
-npm run build-storybook  # build estatico (publicado no CI)
+pnpm storybook           # dev em localhost:6006
+pnpm build-storybook     # build estatico (publicado no CI)
 ```
 
 Addons configurados:
