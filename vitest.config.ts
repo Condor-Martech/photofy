@@ -9,9 +9,9 @@ const dirname = typeof __dirname !== "undefined" ? __dirname : path.dirname(file
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react()],
-  // Espelha o alias "@/*" -> "./*" do tsconfig.json para os testes.
+  // Espelha o alias "@/*" -> "./src/*" do tsconfig.json para os testes.
   resolve: {
-    alias: { "@": fileURLToPath(new URL(".", import.meta.url)) },
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   test: {
     projects: [
@@ -22,19 +22,18 @@ export default defineConfig({
           environment: "jsdom",
           setupFiles: ["./vitest.setup.ts"],
           globals: true,
-          // ponytail: root vitest só roda os testes vitest do app (app/**, lib/**).
-          // Os subprojetos (worker/, workers/, packages/) têm package.json e runner
+          // ponytail: root vitest só roda os testes vitest do app (src/app/**, src/lib/**).
+          // Os subprojetos (workers/*, packages/*) têm package.json e runner
           // próprios, e alguns testes de domínio usam node:test (`node --test`), não
           // vitest — varrê-los aqui quebra o `vitest run`. Upgrade: workspace vitest
           // ou script de teste dedicado por pacote quando o monorepo se firmar.
           exclude: [
             ...configDefaults.exclude,
-            "worker/**",
             "workers/**",
             "packages/**",
-            "lib/upload/validate-upload.test.ts",
-            "lib/dispositivos/revogar.test.ts",
-            "lib/slideshow/slideshow-config.test.ts",
+            "src/lib/upload/validate-upload.test.ts",
+            "src/lib/dispositivos/revogar.test.ts",
+            "src/lib/slideshow/slideshow-config.test.ts",
           ],
         },
       },
