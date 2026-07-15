@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { breakpoints, touchTarget } from '../../src/design-tokens/tokens';
+import { breakpoints, touchTarget } from '../../design-tokens/tokens';
 
 function BreakpointTable() {
   return (

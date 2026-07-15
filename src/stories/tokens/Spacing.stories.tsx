@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { spacing } from '../../src/design-tokens/tokens';
+import { spacing } from '../../design-tokens/tokens';
 
 function SpacingScale() {
   return (

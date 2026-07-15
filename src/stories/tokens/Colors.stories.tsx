@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { colors } from '../../src/design-tokens/tokens';
+import { colors } from '../../design-tokens/tokens';
 
 function Swatch({ color, name }: { color: string; name: string }) {
   return (

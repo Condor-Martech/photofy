@@ -4,8 +4,8 @@ import { QUEUE_NAMES, defaultJobOptions, createQueue, createWorker } from '../sr
 
 // Smoke test do esqueleto: roda sem Redis (só toca as definições puras).
 test('filas cobrem os pipelines de imagem e reel', () => {
-  assert.equal(QUEUE_NAMES.image, 'media:image');
-  assert.equal(QUEUE_NAMES.reel, 'media:reel');
+  assert.equal(QUEUE_NAMES.image, 'media-image');
+  assert.equal(QUEUE_NAMES.reel, 'media-reel');
 });
 
 test('default job options fazem retry com backoff (base PHF-033)', () => {
